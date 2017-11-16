@@ -1,0 +1,913 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:switches
+LIBS:relays
+LIBS:modules
+LIBS:motors
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:Arduino_LedStrip-cache
+EELAYER 25 0
+EELAYER END
+$Descr User 8268 5827
+encoding utf-8
+Sheet 1 1
+Title "Arduino LED Strip"
+Date "2017-11-08"
+Rev "V1r0"
+Comp "GoInK13"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Arduino_Nano_v3.x A1
+U 1 1 5A030002
+P 1850 2150
+F 0 "A1" H 1650 3175 50  0000 R CNN
+F 1 "Arduino_Nano_v3.x" H 1650 3100 50  0000 R CNN
+F 2 "Modules:Arduino_Nano" H 2000 1200 50  0001 L CNN
+F 3 "" H 1850 1150 50  0001 C CNN
+	1    1850 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L SW_Push SW2
+U 1 1 5A036085
+P 2050 4600
+F 0 "SW2" H 2100 4700 50  0000 L CNN
+F 1 "SW_Push" H 2050 4540 50  0000 C CNN
+F 2 "Buttons_Switches_ThroughHole:SW_PUSH_6mm_h13mm" H 2050 4800 50  0001 C CNN
+F 3 "" H 2050 4800 50  0001 C CNN
+	1    2050 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L POT RV1
+U 1 1 5A036106
+P 900 4850
+F 0 "RV1" V 725 4850 50  0000 C CNN
+F 1 "PTV09A" V 800 4850 50  0000 C CNN
+F 2 "Potentiometers:Potentiometer_Bourns_PTV09A-1_Horizontal" H 900 4850 50  0001 C CNN
+F 3 "" H 900 4850 50  0001 C CNN
+	1    900  4850
+	-1   0    0    1   
+$EndComp
+$Comp
+L SW_Push SW1
+U 1 1 5A037113
+P 1400 4600
+F 0 "SW1" H 1450 4700 50  0000 L CNN
+F 1 "SW_Push" H 1400 4540 50  0000 C CNN
+F 2 "Buttons_Switches_ThroughHole:SW_PUSH_6mm_h13mm" H 1400 4800 50  0001 C CNN
+F 3 "" H 1400 4800 50  0001 C CNN
+	1    1400 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L R R7
+U 1 1 5A037190
+P 1600 4850
+F 0 "R7" V 1680 4850 50  0000 C CNN
+F 1 "1k" V 1600 4850 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 1530 4850 50  0001 C CNN
+F 3 "" H 1600 4850 50  0001 C CNN
+	1    1600 4850
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR01
+U 1 1 5A037C46
+P 3350 4650
+F 0 "#PWR01" H 3350 4400 50  0001 C CNN
+F 1 "GND" H 3350 4500 50  0000 C CNN
+F 2 "" H 3350 4650 50  0001 C CNN
+F 3 "" H 3350 4650 50  0001 C CNN
+	1    3350 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Barrel_Jack J6
+U 1 1 5A037C66
+P 2850 4600
+F 0 "J6" H 2850 4810 50  0000 C CNN
+F 1 "Barrel_Jack" H 2850 4425 50  0000 C CNN
+F 2 "Connect:BARREL_JACK" H 2900 4560 50  0001 C CNN
+F 3 "" H 2900 4560 50  0001 C CNN
+	1    2850 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR02
+U 1 1 5A038541
+P 4800 3550
+F 0 "#PWR02" H 4800 3400 50  0001 C CNN
+F 1 "+12V" H 4800 3690 50  0000 C CNN
+F 2 "" H 4800 3550 50  0001 C CNN
+F 3 "" H 4800 3550 50  0001 C CNN
+	1    4800 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R8
+U 1 1 5A039E73
+P 2250 4850
+F 0 "R8" V 2330 4850 50  0000 C CNN
+F 1 "1k" V 2250 4850 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 2180 4850 50  0001 C CNN
+F 3 "" H 2250 4850 50  0001 C CNN
+	1    2250 4850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L +5V #PWR03
+U 1 1 5A03A695
+P 2050 4400
+F 0 "#PWR03" H 2050 4250 50  0001 C CNN
+F 1 "+5V" H 2050 4540 50  0000 C CNN
+F 2 "" H 2050 4400 50  0001 C CNN
+F 3 "" H 2050 4400 50  0001 C CNN
+	1    2050 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR04
+U 1 1 5A03A6BE
+P 2400 4850
+F 0 "#PWR04" H 2400 4600 50  0001 C CNN
+F 1 "GND" H 2400 4700 50  0000 C CNN
+F 2 "" H 2400 4850 50  0001 C CNN
+F 3 "" H 2400 4850 50  0001 C CNN
+	1    2400 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR05
+U 1 1 5A03A833
+P 1750 4850
+F 0 "#PWR05" H 1750 4600 50  0001 C CNN
+F 1 "GND" H 1750 4700 50  0000 C CNN
+F 2 "" H 1750 4850 50  0001 C CNN
+F 3 "" H 1750 4850 50  0001 C CNN
+	1    1750 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR06
+U 1 1 5A03A988
+P 1400 4400
+F 0 "#PWR06" H 1400 4250 50  0001 C CNN
+F 1 "+5V" H 1400 4540 50  0000 C CNN
+F 2 "" H 1400 4400 50  0001 C CNN
+F 3 "" H 1400 4400 50  0001 C CNN
+	1    1400 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR07
+U 1 1 5A03AABB
+P 900 4700
+F 0 "#PWR07" H 900 4550 50  0001 C CNN
+F 1 "+5V" H 900 4840 50  0000 C CNN
+F 2 "" H 900 4700 50  0001 C CNN
+F 3 "" H 900 4700 50  0001 C CNN
+	1    900  4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR08
+U 1 1 5A03AAF0
+P 900 5000
+F 0 "#PWR08" H 900 4750 50  0001 C CNN
+F 1 "GND" H 900 4850 50  0000 C CNN
+F 2 "" H 900 5000 50  0001 C CNN
+F 3 "" H 900 5000 50  0001 C CNN
+	1    900  5000
+	1    0    0    -1  
+$EndComp
+Text Label 1350 2750 2    60   ~ 0
+ar_IR
+Text Notes 1200 850  0    60   ~ 0
+PWM : D3,D5,D6,D9,D10,D11
+Text Label 1350 1950 2    60   ~ 0
+ar_Din_LEDWS
+$Comp
+L +12V #PWR09
+U 1 1 5A0E181E
+P 1750 1150
+F 0 "#PWR09" H 1750 1000 50  0001 C CNN
+F 1 "+12V" H 1750 1290 50  0000 C CNN
+F 2 "" H 1750 1150 50  0001 C CNN
+F 3 "" H 1750 1150 50  0001 C CNN
+	1    1750 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR010
+U 1 1 5A0E71A2
+P 1900 3200
+F 0 "#PWR010" H 1900 2950 50  0001 C CNN
+F 1 "GND" H 1900 3050 50  0000 C CNN
+F 2 "" H 1900 3200 50  0001 C CNN
+F 3 "" H 1900 3200 50  0001 C CNN
+	1    1900 3200
+	1    0    0    -1  
+$EndComp
+Text Label 2350 2150 0    60   ~ 0
+ar_A0_Pot
+Text Label 2350 1550 0    60   ~ 0
+ar_Reset1
+Text Label 2350 1650 0    60   ~ 0
+ar_Reset2
+Text Label 2350 1950 0    60   ~ 0
+ar_Aref
+Text Label 1350 2450 2    60   ~ 0
+ar_LED0_R
+Text Label 1350 2550 2    60   ~ 0
+ar_LED0_G
+Text Label 1350 2650 2    60   ~ 0
+ar_LED0_B
+$Comp
+L Q_NMOS_GSD Q3
+U 1 1 5A0EAFAA
+P 7050 950
+F 0 "Q3" H 7250 1000 50  0000 L CNN
+F 1 "IRFZ44N" H 7250 900 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-220-3_Vertical" H 7250 1050 50  0001 C CNN
+F 3 "" H 7050 950 50  0001 C CNN
+	1    7050 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R3
+U 1 1 5A0EBAAD
+P 6700 950
+F 0 "R3" V 6780 950 50  0000 C CNN
+F 1 "1k" V 6700 950 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 6630 950 50  0001 C CNN
+F 3 "" H 6700 950 50  0001 C CNN
+	1    6700 950 
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR011
+U 1 1 5A0EC08C
+P 7150 1150
+F 0 "#PWR011" H 7150 900 50  0001 C CNN
+F 1 "GND" H 7150 1000 50  0000 C CNN
+F 2 "" H 7150 1150 50  0001 C CNN
+F 3 "" H 7150 1150 50  0001 C CNN
+	1    7150 1150
+	1    0    0    -1  
+$EndComp
+Text Label 7150 750  0    60   ~ 0
+LED0_B
+Text Label 1350 2850 2    60   ~ 0
+ar_LED_BuiltIn
+Text Label 6550 950  2    60   ~ 0
+ar_LED0_B
+$Comp
+L Q_NMOS_GSD Q2
+U 1 1 5A0EE48C
+P 5750 950
+F 0 "Q2" H 5950 1000 50  0000 L CNN
+F 1 "IRFZ44N" H 5950 900 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-220-3_Vertical" H 5950 1050 50  0001 C CNN
+F 3 "" H 5750 950 50  0001 C CNN
+	1    5750 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R2
+U 1 1 5A0EE492
+P 5400 950
+F 0 "R2" V 5480 950 50  0000 C CNN
+F 1 "1k" V 5400 950 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 5330 950 50  0001 C CNN
+F 3 "" H 5400 950 50  0001 C CNN
+	1    5400 950 
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR012
+U 1 1 5A0EE498
+P 5850 1150
+F 0 "#PWR012" H 5850 900 50  0001 C CNN
+F 1 "GND" H 5850 1000 50  0000 C CNN
+F 2 "" H 5850 1150 50  0001 C CNN
+F 3 "" H 5850 1150 50  0001 C CNN
+	1    5850 1150
+	1    0    0    -1  
+$EndComp
+Text Label 5850 750  0    60   ~ 0
+LED0_G
+Text Label 5250 950  2    60   ~ 0
+ar_LED0_G
+$Comp
+L Q_NMOS_GSD Q1
+U 1 1 5A0EE809
+P 4450 950
+F 0 "Q1" H 4650 1000 50  0000 L CNN
+F 1 "IRFZ44N" H 4650 900 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-220-3_Vertical" H 4650 1050 50  0001 C CNN
+F 3 "" H 4450 950 50  0001 C CNN
+	1    4450 950 
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R1
+U 1 1 5A0EE80F
+P 4100 950
+F 0 "R1" V 4180 950 50  0000 C CNN
+F 1 "1k" V 4100 950 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 4030 950 50  0001 C CNN
+F 3 "" H 4100 950 50  0001 C CNN
+	1    4100 950 
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR013
+U 1 1 5A0EE815
+P 4550 1150
+F 0 "#PWR013" H 4550 900 50  0001 C CNN
+F 1 "GND" H 4550 1000 50  0000 C CNN
+F 2 "" H 4550 1150 50  0001 C CNN
+F 3 "" H 4550 1150 50  0001 C CNN
+	1    4550 1150
+	1    0    0    -1  
+$EndComp
+Text Label 4550 750  0    60   ~ 0
+LED0_R
+Text Label 3950 950  2    60   ~ 0
+ar_LED0_R
+Text Label 1350 1850 2    60   ~ 0
+ar_LED1_R
+Text Label 1350 2050 2    60   ~ 0
+ar_LED1_G
+Text Label 1350 2150 2    60   ~ 0
+ar_LED1_B
+Text Label 1350 2250 2    60   ~ 0
+ar_D7
+Text Label 1350 2350 2    60   ~ 0
+ar_D8
+Text Label 1350 1750 2    60   ~ 0
+ar_D2
+Text Label 1350 1650 2    60   ~ 0
+ar_D1_TX
+Text Label 1350 1550 2    60   ~ 0
+ar_D0_RX
+Text Label 2350 2250 0    60   ~ 0
+ar_A1_D15
+Text Label 2350 2350 0    60   ~ 0
+ar_A2_D16
+Text Label 2350 2450 0    60   ~ 0
+ar_A3_D17
+Text Label 2350 2550 0    60   ~ 0
+ar_A4_D18
+Text Label 2350 2650 0    60   ~ 0
+ar_A5_D19
+Text Label 2350 2750 0    60   ~ 0
+ar_A6
+Text Label 2350 2850 0    60   ~ 0
+ar_A7
+$Comp
+L Q_NMOS_GSD Q6
+U 1 1 5A0F1E43
+P 7050 1700
+F 0 "Q6" H 7250 1750 50  0000 L CNN
+F 1 "IRFZ44N" H 7250 1650 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-220-3_Vertical" H 7250 1800 50  0001 C CNN
+F 3 "" H 7050 1700 50  0001 C CNN
+	1    7050 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R6
+U 1 1 5A0F1E49
+P 6700 1700
+F 0 "R6" V 6780 1700 50  0000 C CNN
+F 1 "1k" V 6700 1700 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 6630 1700 50  0001 C CNN
+F 3 "" H 6700 1700 50  0001 C CNN
+	1    6700 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR014
+U 1 1 5A0F1E4F
+P 7150 1900
+F 0 "#PWR014" H 7150 1650 50  0001 C CNN
+F 1 "GND" H 7150 1750 50  0000 C CNN
+F 2 "" H 7150 1900 50  0001 C CNN
+F 3 "" H 7150 1900 50  0001 C CNN
+	1    7150 1900
+	1    0    0    -1  
+$EndComp
+Text Label 7150 1500 0    60   ~ 0
+LED1_B
+Text Label 6550 1700 2    60   ~ 0
+ar_LED1_B
+$Comp
+L Q_NMOS_GSD Q5
+U 1 1 5A0F1E57
+P 5750 1700
+F 0 "Q5" H 5950 1750 50  0000 L CNN
+F 1 "IRFZ44N" H 5950 1650 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-220-3_Vertical" H 5950 1800 50  0001 C CNN
+F 3 "" H 5750 1700 50  0001 C CNN
+	1    5750 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R5
+U 1 1 5A0F1E5D
+P 5400 1700
+F 0 "R5" V 5480 1700 50  0000 C CNN
+F 1 "1k" V 5400 1700 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 5330 1700 50  0001 C CNN
+F 3 "" H 5400 1700 50  0001 C CNN
+	1    5400 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR015
+U 1 1 5A0F1E63
+P 5850 1900
+F 0 "#PWR015" H 5850 1650 50  0001 C CNN
+F 1 "GND" H 5850 1750 50  0000 C CNN
+F 2 "" H 5850 1900 50  0001 C CNN
+F 3 "" H 5850 1900 50  0001 C CNN
+	1    5850 1900
+	1    0    0    -1  
+$EndComp
+Text Label 5850 1500 0    60   ~ 0
+LED1_G
+Text Label 5250 1700 2    60   ~ 0
+ar_LED1_G
+$Comp
+L Q_NMOS_GSD Q4
+U 1 1 5A0F1E6B
+P 4450 1700
+F 0 "Q4" H 4650 1750 50  0000 L CNN
+F 1 "IRFZ44N" H 4650 1650 50  0000 L CNN
+F 2 "TO_SOT_Packages_THT:TO-220-3_Vertical" H 4650 1800 50  0001 C CNN
+F 3 "" H 4450 1700 50  0001 C CNN
+	1    4450 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R4
+U 1 1 5A0F1E71
+P 4100 1700
+F 0 "R4" V 4180 1700 50  0000 C CNN
+F 1 "1k" V 4100 1700 50  0000 C CNN
+F 2 "Resistors_SMD:R_0603_HandSoldering" V 4030 1700 50  0001 C CNN
+F 3 "" H 4100 1700 50  0001 C CNN
+	1    4100 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR016
+U 1 1 5A0F1E77
+P 4550 1900
+F 0 "#PWR016" H 4550 1650 50  0001 C CNN
+F 1 "GND" H 4550 1750 50  0000 C CNN
+F 2 "" H 4550 1900 50  0001 C CNN
+F 3 "" H 4550 1900 50  0001 C CNN
+	1    4550 1900
+	1    0    0    -1  
+$EndComp
+Text Label 4550 1500 0    60   ~ 0
+LED1_R
+Text Label 3950 1700 2    60   ~ 0
+ar_LED1_R
+$Comp
+L TSOP45xx U1
+U 1 1 5A0F5783
+P 4000 2750
+F 0 "U1" H 3600 3050 50  0000 L CNN
+F 1 "TSOP4838" H 3600 2450 50  0000 L CNN
+F 2 "Opto-Devices:IRReceiver_Vishay_MOLD-3pin" H 3950 2375 50  0001 C CNN
+F 3 "" H 4650 3050 50  0001 C CNN
+	1    4000 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR017
+U 1 1 5A0F658B
+P 2050 1150
+F 0 "#PWR017" H 2050 1000 50  0001 C CNN
+F 1 "+5V" H 2050 1290 50  0000 C CNN
+F 2 "" H 2050 1150 50  0001 C CNN
+F 3 "" H 2050 1150 50  0001 C CNN
+	1    2050 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR018
+U 1 1 5A0F66C5
+P 4400 2550
+F 0 "#PWR018" H 4400 2400 50  0001 C CNN
+F 1 "+5V" H 4400 2690 50  0000 C CNN
+F 2 "" H 4400 2550 50  0001 C CNN
+F 3 "" H 4400 2550 50  0001 C CNN
+	1    4400 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR019
+U 1 1 5A0F6914
+P 4400 2950
+F 0 "#PWR019" H 4400 2700 50  0001 C CNN
+F 1 "GND" H 4400 2800 50  0000 C CNN
+F 2 "" H 4400 2950 50  0001 C CNN
+F 3 "" H 4400 2950 50  0001 C CNN
+	1    4400 2950
+	1    0    0    -1  
+$EndComp
+Text Label 4400 2750 0    60   ~ 0
+ar_IR
+$Comp
+L Conn_01x04_Male J3
+U 1 1 5A0F808E
+P 5000 3650
+F 0 "J3" H 5000 3850 50  0000 C CNN
+F 1 "LED0" H 5000 3350 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 5000 3650 50  0001 C CNN
+F 3 "" H 5000 3650 50  0001 C CNN
+	1    5000 3650
+	-1   0    0    -1  
+$EndComp
+Text Label 4800 3750 2    60   ~ 0
+LED0_R
+Text Label 4800 3650 2    60   ~ 0
+LED0_G
+Text Label 4800 3850 2    60   ~ 0
+LED0_B
+$Comp
+L +12V #PWR020
+U 1 1 5A0FAF9D
+P 5500 3550
+F 0 "#PWR020" H 5500 3400 50  0001 C CNN
+F 1 "+12V" H 5500 3690 50  0000 C CNN
+F 2 "" H 5500 3550 50  0001 C CNN
+F 3 "" H 5500 3550 50  0001 C CNN
+	1    5500 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Conn_01x04_Male J4
+U 1 1 5A0FAFA3
+P 5700 3650
+F 0 "J4" H 5700 3850 50  0000 C CNN
+F 1 "LED1" H 5700 3350 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x04_Pitch2.54mm" H 5700 3650 50  0001 C CNN
+F 3 "" H 5700 3650 50  0001 C CNN
+	1    5700 3650
+	-1   0    0    -1  
+$EndComp
+Text Label 5500 3750 2    60   ~ 0
+LED1_R
+Text Label 5500 3650 2    60   ~ 0
+LED1_G
+Text Label 5500 3850 2    60   ~ 0
+LED1_B
+$Comp
+L Conn_01x15_Male J2
+U 1 1 5A0FC947
+P 7550 3200
+F 0 "J2" H 7550 4000 50  0000 C CNN
+F 1 "Conn_R" H 7600 2400 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x15_Pitch2.54mm" H 7550 3200 50  0001 C CNN
+F 3 "" H 7550 3200 50  0001 C CNN
+	1    7550 3200
+	-1   0    0    -1  
+$EndComp
+Text Label 7350 2500 2    60   ~ 0
+ar_IR
+Text Label 7350 3300 2    60   ~ 0
+ar_Din_LEDWS
+Text Label 7350 2800 2    60   ~ 0
+ar_LED0_R
+Text Label 7350 2700 2    60   ~ 0
+ar_LED0_G
+Text Label 7350 2600 2    60   ~ 0
+ar_LED0_B
+Text Label 7350 3400 2    60   ~ 0
+ar_LED1_R
+Text Label 7350 3200 2    60   ~ 0
+ar_LED1_G
+Text Label 7350 3100 2    60   ~ 0
+ar_LED1_B
+Text Label 7350 3000 2    60   ~ 0
+ar_D7
+Text Label 7350 2900 2    60   ~ 0
+ar_D8
+Text Label 7350 3500 2    60   ~ 0
+ar_D2
+$Comp
+L GND #PWR021
+U 1 1 5A10079A
+P 7000 3600
+F 0 "#PWR021" H 7000 3350 50  0001 C CNN
+F 1 "GND" H 7000 3450 50  0000 C CNN
+F 2 "" H 7000 3600 50  0001 C CNN
+F 3 "" H 7000 3600 50  0001 C CNN
+	1    7000 3600
+	-1   0    0    1   
+$EndComp
+Text Label 7350 3700 2    60   ~ 0
+ar_Reset2
+Text Label 7350 3800 2    60   ~ 0
+ar_D0_RX
+Text Label 7350 3900 2    60   ~ 0
+ar_D1_TX
+$Comp
+L Conn_01x15_Male J1
+U 1 1 5A101251
+P 6600 3200
+F 0 "J1" H 6600 4000 50  0000 C CNN
+F 1 "Conn_L" H 6600 2400 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x15_Pitch2.54mm" H 6600 3200 50  0001 C CNN
+F 3 "" H 6600 3200 50  0001 C CNN
+	1    6600 3200
+	-1   0    0    -1  
+$EndComp
+Text Label 6400 2500 2    60   ~ 0
+ar_LED_BuiltIn
+Text Label 1950 1150 1    60   ~ 0
+3V3
+Text Label 6400 2600 2    60   ~ 0
+3V3
+Text Label 6400 2700 2    60   ~ 0
+ar_Aref
+Text Label 6400 2800 2    60   ~ 0
+ar_A0_Pot
+Text Label 6400 2900 2    60   ~ 0
+ar_A1_D15
+Text Label 6400 3000 2    60   ~ 0
+ar_A2_D16
+Text Label 6400 3100 2    60   ~ 0
+ar_A3_D17
+Text Label 6400 3200 2    60   ~ 0
+ar_A4_D18
+Text Label 6400 3300 2    60   ~ 0
+ar_A5_D19
+Text Label 6400 3400 2    60   ~ 0
+ar_A6
+Text Label 6400 3500 2    60   ~ 0
+ar_A7
+$Comp
+L +5V #PWR022
+U 1 1 5A10322A
+P 6050 3600
+F 0 "#PWR022" H 6050 3450 50  0001 C CNN
+F 1 "+5V" H 6050 3740 50  0000 C CNN
+F 2 "" H 6050 3600 50  0001 C CNN
+F 3 "" H 6050 3600 50  0001 C CNN
+	1    6050 3600
+	1    0    0    -1  
+$EndComp
+Text Label 6400 3700 2    60   ~ 0
+ar_Reset1
+$Comp
+L GND #PWR023
+U 1 1 5A103582
+P 6200 3800
+F 0 "#PWR023" H 6200 3550 50  0001 C CNN
+F 1 "GND" H 6200 3650 50  0000 C CNN
+F 2 "" H 6200 3800 50  0001 C CNN
+F 3 "" H 6200 3800 50  0001 C CNN
+	1    6200 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR024
+U 1 1 5A103767
+P 6350 3900
+F 0 "#PWR024" H 6350 3750 50  0001 C CNN
+F 1 "+12V" H 6350 4040 50  0000 C CNN
+F 2 "" H 6350 3900 50  0001 C CNN
+F 3 "" H 6350 3900 50  0001 C CNN
+	1    6350 3900
+	-1   0    0    1   
+$EndComp
+Text Label 750  4850 1    60   ~ 0
+ar_A0_Pot
+Text Label 1400 4850 3    60   ~ 0
+ar_A1_D15
+Text Label 2050 4850 3    60   ~ 0
+ar_A2_D16
+$Comp
+L Conn_01x03_Male J5
+U 1 1 5A10D375
+P 4100 3700
+F 0 "J5" H 4100 3900 50  0000 C CNN
+F 1 "LED_WS2812B" H 4100 3500 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x03_Pitch2.54mm" H 4100 3700 50  0001 C CNN
+F 3 "" H 4100 3700 50  0001 C CNN
+	1    4100 3700
+	-1   0    0    -1  
+$EndComp
+Text Label 3900 3700 2    60   ~ 0
+ar_Din_LEDWS
+$Comp
+L +5V #PWR025
+U 1 1 5A10F598
+P 3700 3600
+F 0 "#PWR025" H 3700 3450 50  0001 C CNN
+F 1 "+5V" H 3700 3740 50  0000 C CNN
+F 2 "" H 3700 3600 50  0001 C CNN
+F 3 "" H 3700 3600 50  0001 C CNN
+	1    3700 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR026
+U 1 1 5A10F5EE
+P 3700 3800
+F 0 "#PWR026" H 3700 3550 50  0001 C CNN
+F 1 "GND" H 3700 3650 50  0000 C CNN
+F 2 "" H 3700 3800 50  0001 C CNN
+F 3 "" H 3700 3800 50  0001 C CNN
+	1    3700 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR027
+U 1 1 5A037C26
+P 3350 4500
+F 0 "#PWR027" H 3350 4350 50  0001 C CNN
+F 1 "+12V" H 3350 4640 50  0000 C CNN
+F 2 "" H 3350 4500 50  0001 C CNN
+F 3 "" H 3350 4500 50  0001 C CNN
+	1    3350 4500
+	1    0    0    -1  
+$EndComp
+Text Notes 2750 4300 0    118  ~ 24
+Power
+Text Notes 850  4350 0    118  ~ 24
+In
+Text Notes 1500 700  0    118  ~ 24
+Arduino
+Text Notes 4850 650  0    118  ~ 24
+LED Supply
+Wire Notes Line
+	5250 3150 5250 2150
+Wire Notes Line
+	3150 3150 5250 3150
+Wire Notes Line
+	3150 2150 7800 2150
+Wire Notes Line
+	3150 500  3150 4100
+Wire Notes Line
+	2550 4100 2550 5350
+Wire Notes Line
+	450  4100 3550 4100
+Wire Wire Line
+	3150 4500 3350 4500
+Wire Wire Line
+	3900 3800 3700 3800
+Wire Wire Line
+	3900 3600 3700 3600
+Wire Wire Line
+	2050 4850 2050 4800
+Wire Wire Line
+	2100 4850 2050 4850
+Wire Wire Line
+	6350 3900 6400 3900
+Wire Wire Line
+	6400 3800 6200 3800
+Wire Wire Line
+	6400 3600 6050 3600
+Wire Wire Line
+	7000 3600 7350 3600
+Connection ~ 1900 3200
+Wire Wire Line
+	1950 3200 1950 3150
+Wire Wire Line
+	1850 3200 1950 3200
+Wire Wire Line
+	1850 3150 1850 3200
+Wire Wire Line
+	1400 4850 1450 4850
+Wire Wire Line
+	1400 4800 1400 4850
+Connection ~ 3200 4650
+Wire Wire Line
+	3200 4700 3150 4700
+Wire Wire Line
+	3200 4600 3150 4600
+Wire Wire Line
+	3200 4600 3200 4700
+Wire Wire Line
+	3350 4650 3200 4650
+Text Notes 5800 2350 0    118  ~ 24
+Connectors
+Text Notes 3550 2350 0    118  ~ 24
+Infrared Sensor
+$Comp
+L CP C1
+U 1 1 5A116536
+P 1050 3700
+F 0 "C1" H 1075 3800 50  0000 L CNN
+F 1 "10u" H 1075 3600 50  0000 L CNN
+F 2 "Capacitors_ThroughHole:CP_Radial_D8.0mm_P3.50mm" H 1088 3550 50  0001 C CNN
+F 3 "" H 1050 3700 50  0001 C CNN
+	1    1050 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR028
+U 1 1 5A1165A3
+P 1050 3550
+F 0 "#PWR028" H 1050 3400 50  0001 C CNN
+F 1 "+12V" H 1050 3690 50  0000 C CNN
+F 2 "" H 1050 3550 50  0001 C CNN
+F 3 "" H 1050 3550 50  0001 C CNN
+	1    1050 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR029
+U 1 1 5A1165FC
+P 1050 3850
+F 0 "#PWR029" H 1050 3600 50  0001 C CNN
+F 1 "GND" H 1050 3700 50  0000 C CNN
+F 2 "" H 1050 3850 50  0001 C CNN
+F 3 "" H 1050 3850 50  0001 C CNN
+	1    1050 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L PWR_FLAG #FLG030
+U 1 1 5A117857
+P 2900 5100
+F 0 "#FLG030" H 2900 5175 50  0001 C CNN
+F 1 "PWR_FLAG" H 2900 5250 50  0000 C CNN
+F 2 "" H 2900 5100 50  0001 C CNN
+F 3 "" H 2900 5100 50  0001 C CNN
+	1    2900 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR031
+U 1 1 5A1178B7
+P 2900 5100
+F 0 "#PWR031" H 2900 4850 50  0001 C CNN
+F 1 "GND" H 2900 4950 50  0000 C CNN
+F 2 "" H 2900 5100 50  0001 C CNN
+F 3 "" H 2900 5100 50  0001 C CNN
+	1    2900 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L +12V #PWR032
+U 1 1 5A118832
+P 3200 5100
+F 0 "#PWR032" H 3200 4950 50  0001 C CNN
+F 1 "+12V" H 3200 5240 50  0000 C CNN
+F 2 "" H 3200 5100 50  0001 C CNN
+F 3 "" H 3200 5100 50  0001 C CNN
+	1    3200 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L PWR_FLAG #FLG033
+U 1 1 5A11888B
+P 3200 5100
+F 0 "#FLG033" H 3200 5175 50  0001 C CNN
+F 1 "PWR_FLAG" H 3200 5250 50  0000 C CNN
+F 2 "" H 3200 5100 50  0001 C CNN
+F 3 "" H 3200 5100 50  0001 C CNN
+	1    3200 5100
+	-1   0    0    1   
+$EndComp
+$EndSCHEMATC
