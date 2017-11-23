@@ -248,9 +248,9 @@ Text Label 2350 1650 0    60   ~ 0
 ar_Reset2
 Text Label 2350 1950 0    60   ~ 0
 ar_Aref
-Text Label 1350 2450 2    60   ~ 0
-ar_LED0_R
 Text Label 1350 2550 2    60   ~ 0
+ar_LED0_R
+Text Label 1350 2450 2    60   ~ 0
 ar_LED0_G
 Text Label 1350 2650 2    60   ~ 0
 ar_LED0_B
@@ -614,9 +614,9 @@ Text Label 7350 2500 2    60   ~ 0
 ar_IR
 Text Label 7350 3300 2    60   ~ 0
 ar_Din_LEDWS
-Text Label 7350 2800 2    60   ~ 0
-ar_LED0_R
 Text Label 7350 2700 2    60   ~ 0
+ar_LED0_R
+Text Label 7350 2800 2    60   ~ 0
 ar_LED0_G
 Text Label 7350 2600 2    60   ~ 0
 ar_LED0_B
@@ -734,7 +734,7 @@ F 1 "LED_WS2812B" H 4100 3500 50  0000 C CNN
 F 2 "Pin_Headers:Pin_Header_Angled_1x03_Pitch2.54mm" H 4100 3700 50  0001 C CNN
 F 3 "" H 4100 3700 50  0001 C CNN
 	1    4100 3700
-	-1   0    0    -1  
+	-1   0    0    1   
 $EndComp
 Text Label 3900 3700 2    60   ~ 0
 ar_Din_LEDWS
@@ -836,34 +836,34 @@ Infrared Sensor
 $Comp
 L CP C1
 U 1 1 5A116536
-P 1050 3700
-F 0 "C1" H 1075 3800 50  0000 L CNN
-F 1 "10u" H 1075 3600 50  0000 L CNN
-F 2 "Capacitors_ThroughHole:CP_Radial_D8.0mm_P3.50mm" H 1088 3550 50  0001 C CNN
-F 3 "" H 1050 3700 50  0001 C CNN
-	1    1050 3700
+P 750 3700
+F 0 "C1" H 775 3800 50  0000 L CNN
+F 1 "10u" H 775 3600 50  0000 L CNN
+F 2 "Capacitors_ThroughHole:CP_Radial_D8.0mm_P3.50mm" H 788 3550 50  0001 C CNN
+F 3 "" H 750 3700 50  0001 C CNN
+	1    750  3700
 	1    0    0    -1  
 $EndComp
 $Comp
 L +12V #PWR028
 U 1 1 5A1165A3
-P 1050 3550
-F 0 "#PWR028" H 1050 3400 50  0001 C CNN
-F 1 "+12V" H 1050 3690 50  0000 C CNN
-F 2 "" H 1050 3550 50  0001 C CNN
-F 3 "" H 1050 3550 50  0001 C CNN
-	1    1050 3550
+P 750 3550
+F 0 "#PWR028" H 750 3400 50  0001 C CNN
+F 1 "+12V" H 750 3690 50  0000 C CNN
+F 2 "" H 750 3550 50  0001 C CNN
+F 3 "" H 750 3550 50  0001 C CNN
+	1    750  3550
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR029
 U 1 1 5A1165FC
-P 1050 3850
-F 0 "#PWR029" H 1050 3600 50  0001 C CNN
-F 1 "GND" H 1050 3700 50  0000 C CNN
-F 2 "" H 1050 3850 50  0001 C CNN
-F 3 "" H 1050 3850 50  0001 C CNN
-	1    1050 3850
+P 750 3850
+F 0 "#PWR029" H 750 3600 50  0001 C CNN
+F 1 "GND" H 750 3700 50  0000 C CNN
+F 2 "" H 750 3850 50  0001 C CNN
+F 3 "" H 750 3850 50  0001 C CNN
+	1    750  3850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -910,4 +910,52 @@ F 3 "" H 3200 5100 50  0001 C CNN
 	1    3200 5100
 	-1   0    0    1   
 $EndComp
+$Comp
+L Screw_Terminal_01x01 J9
+U 1 1 5A11E95E
+P 1800 3900
+F 0 "J9" H 1800 4000 50  0000 C CNN
+F 1 "Screw_Terminal_01x01" H 1800 3800 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_3.2mm_M3" H 1800 3900 50  0001 C CNN
+F 3 "" H 1800 3900 50  0001 C CNN
+	1    1800 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Screw_Terminal_01x01 J7
+U 1 1 5A11EA74
+P 1800 3650
+F 0 "J7" H 1800 3750 50  0000 C CNN
+F 1 "Screw_Terminal_01x01" H 1800 3550 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_3.2mm_M3" H 1800 3650 50  0001 C CNN
+F 3 "" H 1800 3650 50  0001 C CNN
+	1    1800 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Screw_Terminal_01x01 J8
+U 1 1 5A11EE66
+P 2650 3650
+F 0 "J8" H 2650 3750 50  0000 C CNN
+F 1 "Screw_Terminal_01x01" H 2650 3550 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_3.2mm_M3" H 2650 3650 50  0001 C CNN
+F 3 "" H 2650 3650 50  0001 C CNN
+	1    2650 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Screw_Terminal_01x01 J10
+U 1 1 5A11EEF9
+P 2650 3900
+F 0 "J10" H 2650 4000 50  0000 C CNN
+F 1 "Screw_Terminal_01x01" H 2650 3800 50  0000 C CNN
+F 2 "Mounting_Holes:MountingHole_3.2mm_M3" H 2650 3900 50  0001 C CNN
+F 3 "" H 2650 3900 50  0001 C CNN
+	1    2650 3900
+	1    0    0    -1  
+$EndComp
+NoConn ~ 1600 3650
+NoConn ~ 2450 3650
+NoConn ~ 2450 3900
+NoConn ~ 1600 3900
 $EndSCHEMATC
