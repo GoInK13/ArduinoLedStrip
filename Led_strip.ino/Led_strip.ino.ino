@@ -8,7 +8,9 @@
 #include <EEPROM.h>
 
 //Uncomment the next to enable USB debug
-//#define DBG
+#define DBG
+//Next is removed, bevause LED1_R doesn't work with IR_Receiver…
+//#define IR_RECV
 
 //Const
 const int pwmStepSize = 50;		//Choose number of step for PWM brightness.
@@ -16,21 +18,25 @@ int pwmStep[pwmStepSize];	//Old value : = {0,1,2,5,8,11,15,20,26,33,41,51,64,80,
 
 //Current settings
 int pwmIndexR=0, pwmIndexG=0, pwmIndexB=0;		//Current PWM settings
+int cntTransition=0;	//Count transition for fade and jump.
 int stateButMode, stateButSet;	//Status of buttons
 int stateSet=0;	//Number of settings currently setting. 0 : settings currently not enabled
 int mode=0; //0:color fixed. 1:RGB fading. 2:RGB jumping. 3:Night = Slowly turn OFF, then ON after Xhours
 
 //Saved in EEPROM. To update eeprom after values have changed, you need to click the setting button until going to set 0.
 int set0_R, set0_G, set0_B;	//Mode 0 : fix color
-int set1_speed;	//Speed transition in ms
-int set2_speed;	//Speed transition in ms
+int set1_speed;	//Speed transition in ms. Fade
+int set2_speed;	//Speed transition in ms. Jump
 //Color before night and after. delayNight is in 30min + 5h. ie:2blinks=6h
 int set3_colorBeforeR,set3_colorBeforeG,set3_colorBeforeB,set3_colorAfterR,set3_colorAfterG,set3_colorAfterB, set3_delayNight;
 
 //Next two lines are used for IR receiver. I added a "2" because I had some compilation troubble with the lib IRremote.h.
 //I also changed "TKD2" in IRremoteTools.cpp with "12"
+
+#ifdef IR_RECV
 IRrecv irrecv2(IR_RECV_PIN);
 decode_results results2;
+#endif
 
 void setup()
 {
@@ -104,9 +110,11 @@ void setup()
 		pwmStep[interval]=pow(2, (interval / R)) - 1;
 	}
 	
+#ifdef IR_RECV
 	irrecv2.enableIRIn(); // Start the receiver
+#endif
 	#ifdef DBG
-		Serial.begin(9600);
+		Serial.begin(1000000);
 		Serial.print("Enabled IRin.! pwmStep=");
 		Serial.println(pwmStepSize);
 	#endif
@@ -115,13 +123,15 @@ void setup()
 }
 
 void loop() {
+
+#ifdef IR_RECV
 	if (irrecv2.decode(&results2)) {	//IR decoded
 		digitalWrite(LED_BUILTIN, HIGH);
-#ifdef DBG
+	#ifdef DBG
 		Serial.print(pwmIndexR);
 		Serial.print(". VAL=");
 		Serial.print(results2.value, HEX);
-#endif
+	#endif
 		if(results2.value==IR_LG_BLUE){	//Increase power of blue
 			if(pwmIndexB<pwmStepSize-1)
 				pwmIndexB++;
@@ -140,12 +150,16 @@ void loop() {
     analogWrite(LED1_B,pwmStep[pwmIndexB]);
 		irrecv2.resume(); // Receive the next value
 	}
+#endif
 	if (digitalRead(BUT_MODE)!=stateButMode) {	//Transition button mode
 		stateButMode=digitalRead(BUT_MODE);
 		if (stateButMode==1) {		//Clicked!!
 			Blink(mode+1);
 			stateSet=0;
 		}
+		pwmIndexR=0;
+		pwmIndexG=0;
+		pwmIndexB=0;
 		while(digitalRead(BUT_MODE)==1);	//Wait releasing button
 	}
 	if (digitalRead(BUT_SET)!=stateButSet) {	//Transition button mode
@@ -176,9 +190,41 @@ void UpdateLED(int _mode){
 		pwmIndexG=set0_G;
 		pwmIndexB=set0_B;
 	} else if (_mode==1) {
-		pwmIndexR=(pwmIndexR>=pwmStepSize?0:pwmIndexR+1);
-		pwmIndexG=(pwmIndexG>=pwmStepSize?0:pwmIndexG+1);
-		pwmIndexB=(pwmIndexB>=pwmStepSize?0:pwmIndexB+1);
+		cntTransition=cntTransition>=6*pwmStepSize?0:cntTransition+1;
+		/*
+	0    0    0    OFF        ---
+	0    0    1    Blue       470
+	0    1    1    Turquoise  510     Représentant les couleurs selon leur longueur
+	0    1    0    Green      540     d'onde, de la plus faible à la plus grande
+	1    1    0    Yellow     575
+	1    0    0    Red        650
+	1    0    1    Pink       400
+	1    1    1    White      ---
+	*/
+		if (cntTransition<=1*pwmStepSize) {
+			pwmIndexR=pwmIndexR==0?0:pwmIndexR-1;
+		} else if (cntTransition<=2*pwmStepSize) {
+			pwmIndexG++;
+		} else if (cntTransition<=3*pwmStepSize) {
+			pwmIndexB=pwmIndexB==0?0:pwmIndexB-1;
+		} else if (cntTransition<=4*pwmStepSize) {
+			pwmIndexR++;
+		} else if (cntTransition<=5*pwmStepSize) {
+			pwmIndexG=pwmIndexG==0?0:pwmIndexG-1;
+		} else if (cntTransition<=6*pwmStepSize) {
+			pwmIndexB++;
+		}
+   delay(set1_speed);
+      #ifdef DBG
+        Serial.print("pwmIndexR=");
+        Serial.print(pwmIndexR);
+        Serial.print(",pwmIndexG=");
+        Serial.print(pwmIndexG);
+        Serial.print(",pwmIndexB=");
+        Serial.print(pwmIndexB);
+        Serial.print(",POT=");
+        Serial.println(analogRead(POT));
+      #endif
 	}
 }
 
@@ -466,9 +512,9 @@ void TurnAllLED_Pot(int _pot, int* _ptR, int* _ptG, int* _ptB) {
     *_ptB=255;
   }
   //Transform 0→255 to 0→pwmStepSize
-  *_ptR*pwmStepSize/256;
-  *_ptG*pwmStepSize/256;
-  *_ptB*pwmStepSize/256;
+  *_ptR=pwmStep[*_ptR*pwmStepSize/256];
+  *_ptG=pwmStep[*_ptG*pwmStepSize/256];
+  *_ptB=pwmStep[*_ptB*pwmStepSize/256];
 }
 
 /*
