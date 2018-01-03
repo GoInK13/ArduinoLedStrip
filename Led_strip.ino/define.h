@@ -34,10 +34,10 @@
 
 #define TURN_OFF	0
 #define TURN_RED	1
-#define TURN_BLUE	2
-#define TURN_PINK	3
-#define TURN_GREEN	4
-#define TURN_YELLOW	5
+#define TURN_GREEN	2
+#define TURN_YELLOW	3
+#define TURN_BLUE	4
+#define TURN_PINK	5
 #define TURN_TURQ	6
 #define TURN_WHITE	7
 

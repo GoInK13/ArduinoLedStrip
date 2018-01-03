@@ -8,13 +8,15 @@
 #include <EEPROM.h>
 
 //Uncomment the next to enable USB debug
-#define DBG
+//#define DBG
 //Next is removed, bevause LED1_R doesn't work with IR_Receiver…
 //#define IR_RECV
 
 //Const
-const int pwmStepSize = 50;		//Choose number of step for PWM brightness.
-int pwmStep[pwmStepSize];	//Old value : = {0,1,2,5,8,11,15,20,26,33,41,51,64,80,100,125,160,200,255};
+//const int pwmStepSize = 50;		//Choose number of step for PWM brightness.
+//int pwmStep[pwmStepSize]; //Old value : = {0,1,2,5,8,11,15,20,26,33,41,51,64,80,100,125,160,200,255};
+const int pwmStepSize = 37;    //Number of step for PWM brightness.
+int pwmStep[]={0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,22,25,28,32,36,40,45,51,57,64,72,81,91,102,114,128,143,161,180,202,226,255};
 
 //Current settings
 int pwmIndexR=0, pwmIndexG=0, pwmIndexB=0;		//Current PWM settings
@@ -29,6 +31,8 @@ int set1_speed;	//Speed transition in ms. Fade
 int set2_speed;	//Speed transition in ms. Jump
 //Color before night and after. delayNight is in 30min + 5h. ie:2blinks=6h
 int set3_colorBeforeR,set3_colorBeforeG,set3_colorBeforeB,set3_colorAfterR,set3_colorAfterG,set3_colorAfterB, set3_delayNight;
+
+int mode3_nightStarting;	//millis() start when entering in this mode
 
 //Next two lines are used for IR receiver. I added a "2" because I had some compilation troubble with the lib IRremote.h.
 //I also changed "TKD2" in IRremoteTools.cpp with "12"
@@ -102,19 +106,20 @@ void setup()
 	}
 	stateButMode=digitalRead(BUT_MODE);
 	stateButSet =digitalRead(BUT_SET);
-	
+	/*
 	//Update pwmStep using pwm exponential led fading method. Thanks to diarmuidie : https://diarmuid.ie/blog/pwm-exponential-led-fading-on-arduino-or-other-platforms/
 	float R = ((pwmStepSize-1) * log10(2))/(log10(255));
 	for (int interval = 0; interval < pwmStepSize; interval++) {
 		// Calculate the required PWM value for this interval step
 		pwmStep[interval]=pow(2, (interval / R)) - 1;
 	}
+ */
 	
 #ifdef IR_RECV
 	irrecv2.enableIRIn(); // Start the receiver
 #endif
 	#ifdef DBG
-		Serial.begin(1000000);
+		Serial.begin(115200);
 		Serial.print("Enabled IRin.! pwmStep=");
 		Serial.println(pwmStepSize);
 	#endif
@@ -160,15 +165,19 @@ void loop() {
 		pwmIndexR=0;
 		pwmIndexG=0;
 		pwmIndexB=0;
+		cntTransition=0;
 		while(digitalRead(BUT_MODE)==1);	//Wait releasing button
+		if (mode==3) {	//Mode night
+			mode3_nightStarting=millis();
+		}
+     if (mode==0) {
+        EepromUpdateAll();  //Save all
+      }
 	}
 	if (digitalRead(BUT_SET)!=stateButSet) {	//Transition button mode
 		stateButSet=digitalRead(BUT_SET);
 		if (stateButSet==1) {		//Clicked!!
 			ShowSettings(stateSet+1);
-			if (stateSet==0) {
-				EepromUpdateAll();	//Save all
-			}
 		}
 		while(digitalRead(BUT_SET)==1);	//Wait releasing button
 	}
@@ -225,7 +234,71 @@ void UpdateLED(int _mode){
         Serial.print(",POT=");
         Serial.println(analogRead(POT));
       #endif
-	}
+	} else if (_mode==2) { //Jump
+    cntTransition=cntTransition>=6?1:cntTransition+1;
+    /*
+  R    G    B
+  0    0    1    Blue       470		001	1
+  0    1    1    Turquoise  510     010	2
+  0    1    0    Green      540     011	3
+  1    1    0    Yellow     575		100	4
+  1    0    0    Red        650		101	5
+  1    0    1    Pink       400		110	6
+  */
+    if (cntTransition==1 || cntTransition==2 || cntTransition==6) {
+		pwmIndexB=pwmStepSize;
+    } else {
+    	pwmIndexB=0;
+    }
+    if (cntTransition==2 || cntTransition==3 || cntTransition==4) {
+		pwmIndexG=pwmStepSize;
+    } else {
+    	pwmIndexG=0;
+    }
+    if (cntTransition==4 || cntTransition==5 || cntTransition==6) {
+		pwmIndexR=pwmStepSize;
+    } else {
+    	pwmIndexR=0;
+    }
+   delay(set2_speed);
+ } else if (_mode==3) {	//Night
+ if (millis()-mode3_nightStarting<30000) {   //30 first minutes
+    unsigned long temp_powerNight;
+    temp_powerNight=(millis()-mode3_nightStarting)*pwmStepSize/30000;
+    pwmIndexR=set3_colorBeforeR*(pwmStepSize-temp_powerNight)/pwmStepSize;
+    pwmIndexG=set3_colorBeforeG*(pwmStepSize-temp_powerNight)/pwmStepSize;
+    pwmIndexB=set3_colorBeforeB*(pwmStepSize-temp_powerNight)/pwmStepSize;
+  } else if (millis()-mode3_nightStarting<0+set3_delayNight*30000) {   //During night
+    pwmIndexR=0;
+    pwmIndexG=0;
+    pwmIndexB=0;
+  } else {
+    unsigned long temp_powerNight;
+    temp_powerNight=(millis()-mode3_nightStarting-0-set3_delayNight*30000)*pwmStepSize/30000;
+    pwmIndexR=set3_colorAfterR*temp_powerNight/pwmStepSize;
+    pwmIndexG=set3_colorAfterG*temp_powerNight/pwmStepSize;;
+    pwmIndexB=set3_colorAfterB*temp_powerNight/pwmStepSize;;
+  }
+  /*
+ if (millis()-mode3_nightStarting<1800000) {   //30 first minutes
+    unsigned long temp_powerNight;
+    temp_powerNight=(millis()-mode3_nightStarting)*pwmStepSize/1800000;
+    pwmIndexR=set3_colorBeforeR*(pwmStepSize-temp_powerNight)/pwmStepSize;
+    pwmIndexG=set3_colorBeforeG*(pwmStepSize-temp_powerNight)/pwmStepSize;
+    pwmIndexB=set3_colorBeforeB*(pwmStepSize-temp_powerNight)/pwmStepSize;
+  } else if (millis()-mode3_nightStarting<21600000+set3_delayNight*1800000) {   //During night
+    pwmIndexR=0;
+    pwmIndexG=0;
+    pwmIndexB=0;
+  } else {
+    unsigned long temp_powerNight;
+    temp_powerNight=(millis()-mode3_nightStarting-21600000-set3_delayNight*1800000)*pwmStepSize/1800000;
+    pwmIndexR=set3_colorAfterR*temp_powerNight/pwmStepSize;
+    pwmIndexG=set3_colorAfterG*temp_powerNight/pwmStepSize;;
+    pwmIndexB=set3_colorAfterB*temp_powerNight/pwmStepSize;;
+  }
+  */
+ }
 }
 
 /*
@@ -245,41 +318,107 @@ void LightLED(){
 void SetSettings(){
 	int i;
 	if (mode==0) {
-		if (stateSet==1) {		//R
+		if (stateSet==1) {		//All
 			TurnAllLED_Pot(analogRead(POT), &set0_R, &set0_G, &set0_B);
-		} else if (stateSet==2) {		//G
+		} else if (stateSet==2) {		//R
 			set0_R=analogRead(POT)/pwmStepSize;
-		} else if (stateSet==3) {		//B
+		} else if (stateSet==3) {		//G
 			set0_G=analogRead(POT)/pwmStepSize;
-		} else if (stateSet==4) {
+		} else if (stateSet==4) {   //B
 			set0_B=analogRead(POT)/pwmStepSize;
 		}
 	} else if (mode==1) {
 		if (stateSet==1) {
 			while(digitalRead(BUT_SET)==0){
 				TurnLED(TURN_OFF);
-				for(int c=0; c<255; c++) {
-          analogWrite(LED0_R,c);
-          analogWrite(LED1_R,c);
-					delay(analogRead(POT));
+				for (int i = 0; i < pwmStepSize; i += 1) {
+					analogWrite(LED0_G,pwmStep[i]);
+					analogWrite(LED1_G,pwmStep[i]);
+					delay(analogRead(POT)<4?1:analogRead(POT)/4);
 					if(digitalRead(BUT_SET)==1) return;
 				}
 				FadeLED();
 			}
-			set1_speed=analogRead(POT);
+			while(digitalRead(BUT_SET)==1);
+			set1_speed=analogRead(POT)<4?1:analogRead(POT)/4;
 			stateSet=0;
 		}
 	} else if (mode==2) {
 		if (stateSet==1) {
+			while(digitalRead(BUT_SET)==0){
+				cntTransition=cntTransition>=6?1:cntTransition+1;
+				if (cntTransition==1 || cntTransition==2 || cntTransition==6) {
+					pwmIndexB=pwmStepSize;
+				} else {
+					pwmIndexB=0;
+				}
+				if (cntTransition==2 || cntTransition==3 || cntTransition==4) {
+					pwmIndexG=pwmStepSize;
+				} else {
+					pwmIndexG=0;
+				}
+				if (cntTransition==4 || cntTransition==5 || cntTransition==6) {
+					pwmIndexR=pwmStepSize;
+				} else {
+					pwmIndexR=0;
+				}
+				LightLED();
+				delay(analogRead(POT)*3);
+			}
+			while(digitalRead(BUT_SET)==1);
+			set2_speed=analogRead(POT)*3;
+			stateSet=0;
 		}
 	} else if (mode==3) {
-		if (stateSet==1) {	//		set3_colorBeforeR
-		} else if (stateSet==2) {		//set3_colorBeforeG
-		} else if (stateSet==3) {		//set3_colorBeforeB
-		} else if (stateSet==4) {		//set3_colorAfterR
-		} else if (stateSet==5) {		//set3_colorAfterG
-		} else if (stateSet==6) {		//set3_colorAfterB
-		} else if (stateSet==7) {		//set3_delayNight;
+		if (stateSet==1) {	//		set3_colorBefore
+      while(digitalRead(BUT_SET)==0){
+        TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+        LightLED();
+        delay(5);
+      }
+      while(digitalRead(BUT_SET)==1);
+      set3_colorBeforeR=pwmIndexR;
+      set3_colorBeforeG=pwmIndexG;
+      set3_colorBeforeB=pwmIndexB;
+     stateSet=1;
+		} else if (stateSet==2) {		//set3_colorAfter
+      while(digitalRead(BUT_SET)==0){
+        TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+        LightLED();
+        delay(5);
+      }
+      while(digitalRead(BUT_SET)==1);
+      set3_colorAfterR=pwmIndexR;
+      set3_colorAfterG=pwmIndexG;
+      set3_colorAfterB=pwmIndexB;
+     stateSet=2;
+		} else if (stateSet==3) {		//set3_delayNight;
+			int temp_delayNight=analogRead(POT)/80;
+			while(digitalRead(BUT_SET)==0){
+			if(digitalRead(BUT_SET)==1) return;
+				if (temp_delayNight!=analogRead(POT)/80) {
+          temp_delayNight=analogRead(POT)/80;
+					TurnLED(TURN_RED);
+					delay(100);
+					TurnLED(TURN_OFF);
+					delay(400);
+				}
+				TurnLED(TURN_OFF);
+				delay(100);
+				for (int i = 0; i < temp_delayNight; i += 1) {
+					TurnLED(TURN_WHITE);
+					delay(250);
+					if(temp_delayNight!=analogRead(POT)/80 || digitalRead(BUT_SET)==1) return;
+					TurnLED(TURN_OFF);
+					delay(250);
+					if(temp_delayNight!=analogRead(POT)/80 || digitalRead(BUT_SET)==1) return;
+				}
+				if(temp_delayNight==analogRead(POT)/80 && digitalRead(BUT_SET)==0) delay(1000);
+			}
+			while(digitalRead(BUT_SET)==1);
+			//Save
+			set3_delayNight=analogRead(POT)/80;
+     stateSet=0;
 		}
 	}
 }
@@ -330,21 +469,21 @@ void ShowSettings(int _settings){
 			TurnLED(TURN_OFF);
 			delay(150);
 			for (i = 0; i < pwmStepSize; i += 1) {
-        analogWrite(LED0_R,pwmStep[i]);
-        analogWrite(LED0_G,pwmStep[i]);
-        analogWrite(LED0_B,pwmStep[i]);
-        analogWrite(LED1_R,pwmStep[i]);
-        analogWrite(LED1_G,pwmStep[i]);
-        analogWrite(LED1_B,pwmStep[i]);
+				analogWrite(LED0_R,pwmStep[i]);
+				analogWrite(LED0_G,pwmStep[i]);
+				analogWrite(LED0_B,pwmStep[i]);
+				analogWrite(LED1_R,pwmStep[i]);
+				analogWrite(LED1_G,pwmStep[i]);
+				analogWrite(LED1_B,pwmStep[i]);
 				delay(500/pwmStepSize);
 			}
 			for (i = pwmStepSize-1; i >= 0; i -= 1) {
-        analogWrite(LED0_R,pwmStep[i]);
-        analogWrite(LED0_G,pwmStep[i]);
-        analogWrite(LED0_B,pwmStep[i]);
-        analogWrite(LED1_R,pwmStep[i]);
-        analogWrite(LED1_G,pwmStep[i]);
-        analogWrite(LED1_B,pwmStep[i]);
+				analogWrite(LED0_R,pwmStep[i]);
+				analogWrite(LED0_G,pwmStep[i]);
+				analogWrite(LED0_B,pwmStep[i]);
+				analogWrite(LED1_R,pwmStep[i]);
+				analogWrite(LED1_G,pwmStep[i]);
+				analogWrite(LED1_B,pwmStep[i]);
 				delay(500/pwmStepSize);
 			}
 			delay(300);
@@ -353,79 +492,79 @@ void ShowSettings(int _settings){
 		stateSet=(_settings<=1)?_settings:0;
 		if (stateSet==1) {
 			TurnLED(TURN_OFF);
-			delay(150);
-			TurnLED(TURN_RED);
-			delay(300);
-			TurnLED(TURN_OFF);
+			delay(100);
+			for (i = 0; i < 7; i += 1) {
+				TurnLED(i);
+				delay(50);
+				TurnLED(TURN_OFF);
+				delay(50);
+			}
 			delay(300);
 		}
 	} else if (mode==3) {
-		stateSet=(_settings<=7)?_settings:0;
-		if (stateSet==1) {	//		set3_colorBeforeR
+		stateSet=(_settings<=3)?_settings:0;
+		if (stateSet==1) {	//		set3_colorBefore
+			TurnLED(TURN_YELLOW);
+			delay(150);
+			for (i = pwmStepSize; i >=0 ; i -= 1) {
+				analogWrite(LED0_R,pwmStep[i]);
+				analogWrite(LED0_G,pwmStep[i]);
+				analogWrite(LED1_R,pwmStep[i]);
+				analogWrite(LED1_G,pwmStep[i]);
+				delay(500/pwmStepSize);
+			}
+			TurnLED(TURN_OFF);
+			delay(300);
+		} else if (stateSet==2) {		//set3_colorAfter
 			TurnLED(TURN_OFF);
 			delay(150);
-			TurnLED(TURN_RED);
-			delay(300);
+			for (i = 0; i < pwmStepSize; i += 1) {
+				analogWrite(LED0_B,pwmStep[i]);
+				analogWrite(LED0_G,pwmStep[i]);
+				analogWrite(LED1_B,pwmStep[i]);
+				analogWrite(LED1_G,pwmStep[i]);
+				delay(500/pwmStepSize);
+			}
 			TurnLED(TURN_OFF);
 			delay(300);
-		} else if (stateSet==2) {		//set3_colorBeforeG
-			TurnLED(TURN_OFF);
+		} else if (stateSet==3) {		//set3_delayNight;
+			TurnLED(TURN_YELLOW);
 			delay(150);
-			TurnLED(TURN_GREEN);
-			delay(300);
+			for (i = pwmStepSize; i >=0 ; i -= 1) {
+				analogWrite(LED0_R,pwmStep[i]);
+				analogWrite(LED0_G,pwmStep[i]);
+				analogWrite(LED1_R,pwmStep[i]);
+				analogWrite(LED1_G,pwmStep[i]);
+				delay(250/pwmStepSize);
+			}
 			TurnLED(TURN_OFF);
-			delay(300);
-		} else if (stateSet==3) {		//set3_colorBeforeB
-			TurnLED(TURN_OFF);
-			delay(150);
-			TurnLED(TURN_BLUE);
-			delay(300);
-			TurnLED(TURN_OFF);
-			delay(300);
-		} else if (stateSet==4) {		//set3_colorAfterR
-			TurnLED(TURN_OFF);
-			delay(150);
-			TurnLED(TURN_RED);
-			delay(300);
-			TurnLED(TURN_RED);
-			delay(300);
-			TurnLED(TURN_OFF);
-			delay(300);
-		} else if (stateSet==5) {		//set3_colorAfterG
-			TurnLED(TURN_OFF);
-			delay(150);
-			TurnLED(TURN_GREEN);
-			delay(300);
-			TurnLED(TURN_GREEN);
-			delay(300);
-			TurnLED(TURN_OFF);
-			delay(300);
-		} else if (stateSet==6) {		//set3_colorAfterB
-			TurnLED(TURN_OFF);
-			delay(150);
-			TurnLED(TURN_BLUE);
-			delay(300);
-			TurnLED(TURN_BLUE);
-			delay(300);
-			TurnLED(TURN_OFF);
-			delay(300);
-		} else if (stateSet==7) {		//set3_delayNight;
-			TurnLED(TURN_OFF);
-			delay(150);
+			delay(50);
 			TurnLED(TURN_WHITE);
-			delay(300);
+			delay(50);
 			TurnLED(TURN_OFF);
-			delay(300);
+			delay(50);
+			TurnLED(TURN_WHITE);
+			delay(50);
+			TurnLED(TURN_OFF);
+			delay(150);
+			for (i = 0; i < pwmStepSize; i += 1) {
+				analogWrite(LED0_B,pwmStep[i]);
+				analogWrite(LED0_G,pwmStep[i]);
+				analogWrite(LED1_B,pwmStep[i]);
+				analogWrite(LED1_G,pwmStep[i]);
+				delay(500/pwmStepSize);
+			}
+			delay(150);
 		}
 	}
 	if (stateSet==0) {		//Anim leaving settings
 		for (i = pwmStepSize-1; i >= 0; i -= 1) {
-      analogWrite(LED0_R,pwmStep[i]);
-      analogWrite(LED0_G,pwmStep[i]);
-      analogWrite(LED0_B,pwmStep[i]);
-      analogWrite(LED1_R,pwmStep[i]);
-      analogWrite(LED1_G,pwmStep[i]);
-      analogWrite(LED1_B,pwmStep[i]);
+			analogWrite(LED0_R,pwmStep[i]);
+			analogWrite(LED0_G,pwmStep[i]);
+			analogWrite(LED0_B,pwmStep[i]);
+			analogWrite(LED1_R,pwmStep[i]);
+			analogWrite(LED1_G,pwmStep[i]);
+			analogWrite(LED1_B,pwmStep[i]);
 			delay(500/pwmStepSize);
 		}
 	}
@@ -521,36 +660,79 @@ void TurnAllLED_Pot(int _pot, int* _ptR, int* _ptG, int* _ptB) {
 	Fade LED R→G→B. Use POT as speed and return if settings is clicked.
 */
 void FadeLED(){
+	int i;
+	for (i = 0; i < pwmStepSize; i += 1) {
+		analogWrite(LED0_B,pwmStep[i]);
+		analogWrite(LED1_B,pwmStep[i]);
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
+		if(digitalRead(BUT_SET)==1) return;
+	}
+	for (i = pwmStepSize-1; i >= 0; i -= 1) {
+		analogWrite(LED0_G,pwmStep[i]);
+		analogWrite(LED1_G,pwmStep[i]);
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
+		if(digitalRead(BUT_SET)==1) return;
+	}
+	for (i = 0; i < pwmStepSize; i += 1) {
+		analogWrite(LED0_R,pwmStep[i]);
+		analogWrite(LED1_R,pwmStep[i]);
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
+		if(digitalRead(BUT_SET)==1) return;
+	}
+	for (i = pwmStepSize-1; i >= 0; i -= 1) {
+		analogWrite(LED0_B,pwmStep[i]);
+		analogWrite(LED1_B,pwmStep[i]);
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
+		if(digitalRead(BUT_SET)==1) return;
+	}
+	for (i = 0; i < pwmStepSize; i += 1) {
+		analogWrite(LED0_G,pwmStep[i]);
+		analogWrite(LED1_G,pwmStep[i]);
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
+		if(digitalRead(BUT_SET)==1) return;
+	}
+	for (i = pwmStepSize-1; i >= 0; i -= 1) {
+		analogWrite(LED0_R,pwmStep[i]);
+		analogWrite(LED1_R,pwmStep[i]);
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
+		if(digitalRead(BUT_SET)==1) return;
+	}
+
+
+
+
+/*
 	for(int c=0; c<255; c++) {
 		analogWrite(6,c);
-		delay(analogRead(POT));
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
 		if(digitalRead(BUT_SET)==1) return;
 	}
 	for(int c=255; c>0; c--) {
 		analogWrite(5,c);
-		delay(analogRead(POT));
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
 		if(digitalRead(BUT_SET)==1) return;
 	}
 	for(int c=0; c<255; c++) {
 		analogWrite(9,c);
-		delay(analogRead(POT));
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
 		if(digitalRead(BUT_SET)==1) return;
 	}
 	for(int c=255; c>0; c--) {
 		analogWrite(6,c);
-		delay(analogRead(POT));
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
 		if(digitalRead(BUT_SET)==1) return;
 	}
 	for(int c=0; c<255; c++) {
 		analogWrite(5,c);
-		delay(analogRead(POT));
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
 		if(digitalRead(BUT_SET)==1) return;
 	}
 	for(int c=255; c>0; c--) {
 		analogWrite(9,c);
-		delay(analogRead(POT));
+		delay(analogRead(POT)<4?1:analogRead(POT)/4);
 		if(digitalRead(BUT_SET)==1) return;
 	}
+	*/
 }
 
 /*
