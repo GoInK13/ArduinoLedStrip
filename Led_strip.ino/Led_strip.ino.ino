@@ -10,7 +10,7 @@
 //Uncomment the next to enable USB debug
 //#define DBG
 //Next is removed, bevause LED1_R doesn't work with IR_Receiver…
-//#define IR_RECV
+#define IR_RECV
 
 //Const
 //const int pwmStepSize = 50;		//Choose number of step for PWM brightness.
