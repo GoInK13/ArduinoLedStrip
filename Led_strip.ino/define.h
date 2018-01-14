@@ -18,11 +18,11 @@
 //LEDs
 #define LEDWS_Din 4
 #define LED0_R    10
-#define LED0_G    9
-#define LED0_B    11
+#define LED0_G    11
+#define LED0_B    9
 #define LED1_R    3
-#define LED1_G    5
-#define LED1_B    6
+#define LED1_G    6
+#define LED1_B    5
 //#define LED_BUILTIN 13  //Good reception IR
 //Buttons
 #define POT   A0   //Analog

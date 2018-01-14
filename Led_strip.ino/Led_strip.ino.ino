@@ -33,6 +33,8 @@ int set3_colorBeforeR, set3_colorBeforeG, set3_colorBeforeB, set3_colorAfterR, s
 
 unsigned long mode3_nightStarting;	//millis() start when entering in this mode
 
+unsigned int oldPot=0;	//Save the old value of POT, before update it
+
 //Next two lines are used for IR receiver. I added a "2" because I had some compilation troubble with the lib IRremote.h.
 //I also changed "TKD2" in IRremoteTools.cpp with "12"
 
@@ -154,13 +156,13 @@ void loop() {
   }
 #endif
   if (digitalRead(BUT_MODE) == 1) {	//Transition button mode
+    while (digitalRead(BUT_MODE) == 1);  //Wait releasing button
     Blink(mode + 1);
     stateSet = 0;
     pwmIndexR = 0;
     pwmIndexG = 0;
     pwmIndexB = 0;
     cntTransition = 0;
-    while (digitalRead(BUT_MODE) == 1);	//Wait releasing button
     if (mode == 3) {	//Mode night
       mode3_nightStarting = millis();
     }
@@ -170,6 +172,7 @@ void loop() {
   }
   if (digitalRead(BUT_SET) == 1) {	//Transition button mode
     ShowSettings(stateSet + 1);
+    oldPot=analogRead(POT);
     while (digitalRead(BUT_SET) == 1);	//Wait releasing button
   }
   if (stateSet != 0) {
@@ -219,15 +222,15 @@ void UpdateLED(int _mode) {
     if (cntTransition <= 1 * pwmStepSize) {
       pwmIndexR = pwmIndexR == 0 ? 0 : pwmIndexR - 1;
     } else if (cntTransition <= 2 * pwmStepSize) {
-      pwmIndexG++;
+      pwmIndexG = pwmIndexG >= pwmStepSize - 1 ? pwmStepSize - 1 : pwmIndexG + 1;
     } else if (cntTransition <= 3 * pwmStepSize) {
       pwmIndexB = pwmIndexB == 0 ? 0 : pwmIndexB - 1;
     } else if (cntTransition <= 4 * pwmStepSize) {
-      pwmIndexR++;
+      pwmIndexR = pwmIndexR >= pwmStepSize - 1 ? pwmStepSize - 1 : pwmIndexR + 1;
     } else if (cntTransition <= 5 * pwmStepSize) {
       pwmIndexG = pwmIndexG == 0 ? 0 : pwmIndexG - 1;
     } else if (cntTransition <= 6 * pwmStepSize) {
-      pwmIndexB++;
+      pwmIndexB = pwmIndexB >= pwmStepSize - 1 ? pwmStepSize - 1 : pwmIndexB + 1;
     }
     DelayInter(set1_speed);
   } else if (_mode == 2) { //Jump
@@ -242,17 +245,17 @@ void UpdateLED(int _mode) {
       1    0    1    Pink       400		110	6
     */
     if (cntTransition == 1 || cntTransition == 2 || cntTransition == 6) {
-      pwmIndexB = pwmStepSize;
+      pwmIndexB = pwmStepSize-1;
     } else {
       pwmIndexB = 0;
     }
     if (cntTransition == 2 || cntTransition == 3 || cntTransition == 4) {
-      pwmIndexG = pwmStepSize;
+      pwmIndexG = pwmStepSize-1;
     } else {
       pwmIndexG = 0;
     }
     if (cntTransition == 4 || cntTransition == 5 || cntTransition == 6) {
-      pwmIndexR = pwmStepSize;
+      pwmIndexR = pwmStepSize-1;
     } else {
       pwmIndexR = 0;
     }
@@ -345,15 +348,36 @@ void SetSettings() {
     }
   } else if (mode == 3) {
     if (stateSet == 1) {	//		set3_colorBefore
-      TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+      if (oldPot/5!=analogRead(POT)/5) {    // /5 : avoid low oscillations
+        oldPot=-1;  //Set impossible value to oldPot. Avoid oldPot==analogRead(POT)
+        TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+      } else {
+        pwmIndexR=set3_colorBeforeR;
+        pwmIndexG=set3_colorBeforeG;
+        pwmIndexB=set3_colorBeforeB;
+      }
     } else if (stateSet == 2) {		//set3_colorAfter
-      TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+      if (oldPot/5!=analogRead(POT)/5) {
+        oldPot=-1;  //Set impossible value to oldPot. Avoid oldPot==analogRead(POT)
+        TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+      } else {
+        pwmIndexR=set3_colorAfterR;
+        pwmIndexG=set3_colorAfterG;
+        pwmIndexB=set3_colorAfterB;
+      }
     } else if (stateSet == 3) {		//set3_delayNight;
       static int temp_delayNight = 0;
-      if (temp_delayNight != analogRead(POT) / 80) {
+      pwmIndexR=0;
+      pwmIndexG=0;
+      pwmIndexB=0;
+      if (oldPot/5==analogRead(POT)/5) {
+        temp_delayNight=set3_delayNight;
+      } else if (temp_delayNight != analogRead(POT) / 80) {
+        oldPot=-1;  //Set impossible value to oldPot. Avoid oldPot==analogRead(POT)
         temp_delayNight = analogRead(POT) / 80;
+//        DelayInter(100);
         TurnLED(TURN_RED);
-        DelayInter(100);
+        DelayInter(200);
         TurnLED(TURN_OFF);
         DelayInter(400);
       }
@@ -367,8 +391,10 @@ void SetSettings() {
         DelayInter(250);
         if (temp_delayNight != analogRead(POT) / 80 || digitalRead(BUT_SET) == 1) return;
       }
-      if (temp_delayNight == analogRead(POT) / 80 && digitalRead(BUT_SET) == 0) delay(1000);
-      temp_delayNight = analogRead(POT) / 80;
+      for (int i = 0; i < 20; i += 1) {
+        if (temp_delayNight == analogRead(POT) / 80 && digitalRead(BUT_SET) == 0 && digitalRead(BUT_MODE) == 0) DelayInter(50);
+        else return;
+      }
     }
   }
 }
@@ -441,10 +467,12 @@ void ShowSettings(int _settings) {
       delay(300);
     }
   } else if (mode == 3) {
-    static unsigned int oldPot = 0; //XXX May have some bug if pot has the exact value between two settings
     stateSet = (_settings <= 3) ? _settings : 0;
     if (stateSet == 0) {
-      set3_delayNight = analogRead(POT) / 80;
+      //Save set3_delayNight if it has changed
+      if (oldPot != analogRead(POT)) {
+        set3_delayNight = analogRead(POT) / 80;
+      }
       mode3_nightStarting = millis();
     } else if (stateSet == 1) {	//		set3_colorBefore
       TurnLED(TURN_YELLOW);
@@ -510,7 +538,6 @@ void ShowSettings(int _settings) {
       }
       delay(150);
     }
-    oldPot = analogRead(POT);
   }
   if (stateSet == 0) {		//Anim leaving settings
     for (i = pwmStepSize - 1; i >= 0; i -= 1) {
@@ -532,14 +559,14 @@ void Blink(int _mode) {
   mode = (_mode < 4) ? _mode : 0;
   int i;
   TurnLED(TURN_OFF);
-  delay(200);
+  DelayInter(200);
   for (i = 0; i < mode + 1; i += 1) {
     TurnLED(TURN_WHITE);
-    delay(400);
+    DelayInter(400);
     TurnLED(TURN_OFF);
-    delay(400);
+    DelayInter(400);
   }
-  delay(400);
+  DelayInter(400);
 }
 
 /*
@@ -603,6 +630,10 @@ void TurnAllLED_Pot(int _pot, int* _ptR, int* _ptG, int* _ptB) {
   else if (_pot > 876 && _pot <= 1022) { //W        White
     *_ptR = 255;
     *_ptG = int((_pot - 876) * 1.75); //G¡
+    *_ptB = 255;
+  } else {
+    *_ptR = 255;
+    *_ptG = 255;
     *_ptB = 255;
   }
   //Transform 0→255 to 0→pwmStepSize

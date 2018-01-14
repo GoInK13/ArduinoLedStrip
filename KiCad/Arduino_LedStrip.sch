@@ -214,19 +214,19 @@ F 3 "" H 900 5000 50  0001 C CNN
 $EndComp
 Text Label 1350 2750 2    60   ~ 0
 ar_IR
-Text Notes 1200 850  0    60   ~ 0
+Text Notes 1200 750  0    60   ~ 0
 PWM : D3,D5,D6,D9,D10,D11
 Text Label 1350 1950 2    60   ~ 0
 ar_Din_LEDWS
 $Comp
 L +12V #PWR09
 U 1 1 5A0E181E
-P 1750 1150
-F 0 "#PWR09" H 1750 1000 50  0001 C CNN
-F 1 "+12V" H 1750 1290 50  0000 C CNN
-F 2 "" H 1750 1150 50  0001 C CNN
-F 3 "" H 1750 1150 50  0001 C CNN
-	1    1750 1150
+P 1750 950
+F 0 "#PWR09" H 1750 800 50  0001 C CNN
+F 1 "+12V" H 1750 1090 50  0000 C CNN
+F 2 "" H 1750 950 50  0001 C CNN
+F 3 "" H 1750 950 50  0001 C CNN
+	1    1750 950 
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -251,9 +251,9 @@ ar_Aref
 Text Label 1350 2550 2    60   ~ 0
 ar_LED0_R
 Text Label 1350 2450 2    60   ~ 0
-ar_LED0_G
-Text Label 1350 2650 2    60   ~ 0
 ar_LED0_B
+Text Label 1350 2650 2    60   ~ 0
+ar_LED0_G
 $Comp
 L Q_NMOS_GDS Q3
 U 1 1 5A0EAFAA
@@ -288,11 +288,11 @@ F 3 "" H 7150 1150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 7150 750  0    60   ~ 0
-LED0_B
+LED0_G
 Text Label 1350 2850 2    60   ~ 0
 ar_LED_BuiltIn
 Text Label 6550 950  2    60   ~ 0
-ar_LED0_B
+ar_LED0_G
 $Comp
 L Q_NMOS_GDS Q2
 U 1 1 5A0EE48C
@@ -327,9 +327,9 @@ F 3 "" H 5850 1150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 5850 750  0    60   ~ 0
-LED0_G
+LED0_B
 Text Label 5250 950  2    60   ~ 0
-ar_LED0_G
+ar_LED0_B
 $Comp
 L Q_NMOS_GDS Q1
 U 1 1 5A0EE809
@@ -370,9 +370,9 @@ ar_LED0_R
 Text Label 1350 1850 2    60   ~ 0
 ar_LED1_R
 Text Label 1350 2050 2    60   ~ 0
-ar_LED1_G
-Text Label 1350 2150 2    60   ~ 0
 ar_LED1_B
+Text Label 1350 2150 2    60   ~ 0
+ar_LED1_G
 Text Label 1350 2250 2    60   ~ 0
 ar_D7
 Text Label 1350 2350 2    60   ~ 0
@@ -431,9 +431,9 @@ F 3 "" H 7150 1900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 7150 1500 0    60   ~ 0
-LED1_B
+LED1_G
 Text Label 6550 1700 2    60   ~ 0
-ar_LED1_B
+ar_LED1_G
 $Comp
 L Q_NMOS_GDS Q5
 U 1 1 5A0F1E57
@@ -468,9 +468,9 @@ F 3 "" H 5850 1900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 5850 1500 0    60   ~ 0
-LED1_G
+LED1_B
 Text Label 5250 1700 2    60   ~ 0
-ar_LED1_G
+ar_LED1_B
 $Comp
 L Q_NMOS_GDS Q4
 U 1 1 5A0F1E6B
@@ -568,9 +568,9 @@ $EndComp
 Text Label 4800 3750 2    60   ~ 0
 LED0_R
 Text Label 4800 3650 2    60   ~ 0
-LED0_G
-Text Label 4800 3850 2    60   ~ 0
 LED0_B
+Text Label 4800 3850 2    60   ~ 0
+LED0_G
 $Comp
 L +12V #PWR020
 U 1 1 5A0FAF9D
@@ -596,9 +596,9 @@ $EndComp
 Text Label 5500 3750 2    60   ~ 0
 LED1_R
 Text Label 5500 3650 2    60   ~ 0
-LED1_G
-Text Label 5500 3850 2    60   ~ 0
 LED1_B
+Text Label 5500 3850 2    60   ~ 0
+LED1_G
 $Comp
 L Conn_01x15_Male J2
 U 1 1 5A0FC947
@@ -617,15 +617,15 @@ ar_Din_LEDWS
 Text Label 7350 2700 2    60   ~ 0
 ar_LED0_R
 Text Label 7350 2800 2    60   ~ 0
-ar_LED0_G
-Text Label 7350 2600 2    60   ~ 0
 ar_LED0_B
+Text Label 7350 2600 2    60   ~ 0
+ar_LED0_G
 Text Label 7350 3400 2    60   ~ 0
 ar_LED1_R
 Text Label 7350 3200 2    60   ~ 0
-ar_LED1_G
-Text Label 7350 3100 2    60   ~ 0
 ar_LED1_B
+Text Label 7350 3100 2    60   ~ 0
+ar_LED1_G
 Text Label 7350 3000 2    60   ~ 0
 ar_D7
 Text Label 7350 2900 2    60   ~ 0
@@ -775,7 +775,7 @@ Text Notes 2750 4300 0    118  ~ 24
 Power
 Text Notes 850  4350 0    118  ~ 24
 In
-Text Notes 1500 700  0    118  ~ 24
+Text Notes 1500 650  0    118  ~ 24
 Arduino
 Text Notes 4850 650  0    118  ~ 24
 LED Supply
@@ -869,45 +869,45 @@ $EndComp
 $Comp
 L PWR_FLAG #FLG030
 U 1 1 5A117857
-P 2900 5100
-F 0 "#FLG030" H 2900 5175 50  0001 C CNN
-F 1 "PWR_FLAG" H 2900 5250 50  0000 C CNN
-F 2 "" H 2900 5100 50  0001 C CNN
-F 3 "" H 2900 5100 50  0001 C CNN
-	1    2900 5100
+P 2750 5100
+F 0 "#FLG030" H 2750 5175 50  0001 C CNN
+F 1 "PWR_FLAG" H 2750 5250 50  0000 C CNN
+F 2 "" H 2750 5100 50  0001 C CNN
+F 3 "" H 2750 5100 50  0001 C CNN
+	1    2750 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR031
 U 1 1 5A1178B7
-P 2900 5100
-F 0 "#PWR031" H 2900 4850 50  0001 C CNN
-F 1 "GND" H 2900 4950 50  0000 C CNN
-F 2 "" H 2900 5100 50  0001 C CNN
-F 3 "" H 2900 5100 50  0001 C CNN
-	1    2900 5100
+P 2750 5100
+F 0 "#PWR031" H 2750 4850 50  0001 C CNN
+F 1 "GND" H 2750 4950 50  0000 C CNN
+F 2 "" H 2750 5100 50  0001 C CNN
+F 3 "" H 2750 5100 50  0001 C CNN
+	1    2750 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L +12V #PWR032
 U 1 1 5A118832
-P 3200 5100
-F 0 "#PWR032" H 3200 4950 50  0001 C CNN
-F 1 "+12V" H 3200 5240 50  0000 C CNN
-F 2 "" H 3200 5100 50  0001 C CNN
-F 3 "" H 3200 5100 50  0001 C CNN
-	1    3200 5100
+P 3050 5100
+F 0 "#PWR032" H 3050 4950 50  0001 C CNN
+F 1 "+12V" H 3050 5240 50  0000 C CNN
+F 2 "" H 3050 5100 50  0001 C CNN
+F 3 "" H 3050 5100 50  0001 C CNN
+	1    3050 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L PWR_FLAG #FLG033
 U 1 1 5A11888B
-P 3200 5100
-F 0 "#FLG033" H 3200 5175 50  0001 C CNN
-F 1 "PWR_FLAG" H 3200 5250 50  0000 C CNN
-F 2 "" H 3200 5100 50  0001 C CNN
-F 3 "" H 3200 5100 50  0001 C CNN
-	1    3200 5100
+P 3050 5100
+F 0 "#FLG033" H 3050 5175 50  0001 C CNN
+F 1 "PWR_FLAG" H 3050 5250 50  0000 C CNN
+F 2 "" H 3050 5100 50  0001 C CNN
+F 3 "" H 3050 5100 50  0001 C CNN
+	1    3050 5100
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -958,4 +958,54 @@ NoConn ~ 1600 3650
 NoConn ~ 2450 3650
 NoConn ~ 2450 3900
 NoConn ~ 1600 3900
+$Comp
+L R_Small R?
+U 1 1 5A5A585B
+P 1750 1050
+F 0 "R?" H 1780 1070 50  0000 L CNN
+F 1 "0" H 1726 1050 50  0000 L CNN
+F 2 "" H 1750 1050 50  0001 C CNN
+F 3 "" H 1750 1050 50  0001 C CNN
+F 4 "Connect only if Vin=12V" H 2450 1050 60  0000 C CNN "Info"
+	1    1750 1050
+	-1   0    0    1   
+$EndComp
+$Comp
+L R_Small R?
+U 1 1 5A5A6B65
+P 3450 5150
+F 0 "R?" H 3480 5170 50  0000 L CNN
+F 1 "0" H 3426 5150 50  0000 L CNN
+F 2 "" H 3450 5150 50  0001 C CNN
+F 3 "" H 3450 5150 50  0001 C CNN
+F 4 "Connect only if Vin=5V" H 3700 5300 39  0000 C CNN "Info"
+	1    3450 5150
+	-1   0    0    1   
+$EndComp
+$Comp
+L +12V #PWR?
+U 1 1 5A5A6FAA
+P 3250 5100
+F 0 "#PWR?" H 3250 4950 50  0001 C CNN
+F 1 "+12V" H 3250 5240 50  0000 C CNN
+F 2 "" H 3250 5100 50  0001 C CNN
+F 3 "" H 3250 5100 50  0001 C CNN
+	1    3250 5100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3250 5100 3250 5250
+Wire Wire Line
+	3250 5250 3450 5250
+$Comp
+L +5V #PWR?
+U 1 1 5A5A73E7
+P 3450 5050
+F 0 "#PWR?" H 3450 4900 50  0001 C CNN
+F 1 "+5V" H 3450 5190 50  0000 C CNN
+F 2 "" H 3450 5050 50  0001 C CNN
+F 3 "" H 3450 5050 50  0001 C CNN
+	1    3450 5050
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
