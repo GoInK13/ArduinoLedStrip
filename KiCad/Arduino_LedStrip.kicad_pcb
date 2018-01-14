@@ -1,7 +1,7 @@
 (kicad_pcb (version 4) (host pcbnew 4.0.7-e2-6376~58~ubuntu14.04.1)
 
   (general
-    (links 0)
+    (links 94)
     (no_connects 2)
     (area 122.424999 51.924999 170.575001 112.575001)
     (thickness 1.6)
@@ -44,7 +44,7 @@
   )
 
   (setup
-    (last_trace_width 1.5)
+    (last_trace_width 0.25)
     (user_trace_width 0.4)
     (user_trace_width 0.75)
     (user_trace_width 1)
@@ -2517,13 +2517,13 @@
   (gr_text LED1 (at 162.75 108) (layer B.SilkS) (tstamp 5A184DB8)
     (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
   )
-  (gr_text B (at 158.85 109.25) (layer B.SilkS) (tstamp 5A184DAD)
+  (gr_text G (at 158.85 109.25) (layer B.SilkS) (tstamp 5A184DAD)
     (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
   )
   (gr_text R (at 161.45 109.25) (layer B.SilkS) (tstamp 5A184DAC)
     (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
   )
-  (gr_text G (at 164 109.25) (layer B.SilkS) (tstamp 5A184DAB)
+  (gr_text B (at 164 109.25) (layer B.SilkS) (tstamp 5A184DAB)
     (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
   )
   (gr_text 12V (at 166.5 109.25) (layer B.SilkS) (tstamp 5A184DAA)
