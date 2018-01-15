@@ -17,3 +17,8 @@ The potentiometer is a PTV09A from Bourns.
 The IR receiver is a TSOP4838.
 All pin header used have a pitch of 2.54mm.
 All resistors are 0603 handsoldering (1kΩ).
+Wemos : D1 mini
+
+**Thanks**
+Thanks to jerome-labidurie on GitHub for his d1_mini library. (Wemos)
+https://github.com/jerome-labidurie/d1_mini_kicad.git

@@ -1,4 +1,4 @@
-update=mer. 08 nov. 2017 14:00:28 CET
+update=lun. 15 janv. 2018 08:25:37 CET
 version=1
 last_client=kicad
 [pcbnew]
@@ -62,3 +62,4 @@ LibName30=opto
 LibName31=atmel
 LibName32=contrib
 LibName33=valves
+LibName34=library/wemos_mini
