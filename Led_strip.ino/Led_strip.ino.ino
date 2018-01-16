@@ -10,7 +10,7 @@
 //Uncomment the next to enable USB debug
 //#define DBG
 //Next is removed, bevause LED1_R doesn't work with IR_Receiver…
-#define IR_RECV
+//#define IR_RECV
 
 //Const
 //const int pwmStepSize = 50;		//Choose number of step for PWM brightness.
@@ -194,6 +194,9 @@ void loop() {
   Serial.print(pwmIndexG);
   Serial.print(",B=");
   Serial.print(pwmIndexB);
+  Serial.print(",POT=");
+  Serial.print(analogRead(POT));
+  delay(100);
 #endif
 }
 
@@ -304,47 +307,93 @@ void LightLED() {
 */
 void SetSettings() {
   int i;
+  static unsigned int localR=0, localG=0, localB=0;
+  static unsigned int localTemp = 0;
   if (mode == 0) {
     if (stateSet == 1) {		//All
-      TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+      if (oldPot/5!=analogRead(POT)/5) {    // /5 : avoid low oscillations
+        oldPot=-1;  //Set impossible value to oldPot. Avoid oldPot==analogRead(POT)
+        TurnAllLED_Pot(analogRead(POT), &pwmIndexR, &pwmIndexG, &pwmIndexB);
+      } else {
+        pwmIndexR=set0_R;
+        pwmIndexG=set0_G;
+        pwmIndexB=set0_B;
+      }
+      localR=pwmIndexR;
+      localG=pwmIndexG;
+      localB=pwmIndexB;
+    } else if (stateSet == 2) {
+      if (oldPot/5!=analogRead(POT)/5) {    // /5 : avoid low oscillations
+        oldPot=-1;  //Set impossible value to oldPot. Avoid oldPot==analogRead(POT)
+        pwmIndexR = (unsigned long) localR*analogRead(POT)/1023;
+        pwmIndexG = (unsigned long) localG*analogRead(POT)/1023;
+        pwmIndexB = (unsigned long) localB*analogRead(POT)/1023;
+      } else {
+        pwmIndexR=localR;
+        pwmIndexG=localG;
+        pwmIndexB=localB;
+      }
     }
   } else if (mode == 1) {
-    if (stateSet == 1) {
+    if (stateSet == 1 || stateSet == 2) {
       cntTransition = cntTransition >= 6 * pwmStepSize ? 0 : cntTransition + 1;
       if (cntTransition <= 1 * pwmStepSize) {
-        pwmIndexR = pwmIndexR == 0 ? 0 : pwmIndexR - 1;
+        localR = localR == 0 ? 0 : localR - 1;
       } else if (cntTransition <= 2 * pwmStepSize) {
-        pwmIndexG++;
+        localG = localG >= pwmStepSize-1 ? pwmStepSize-1 : localG + 1;
       } else if (cntTransition <= 3 * pwmStepSize) {
-        pwmIndexB = pwmIndexB == 0 ? 0 : pwmIndexB - 1;
+        localB = localB == 0 ? 0 : localB - 1;
       } else if (cntTransition <= 4 * pwmStepSize) {
-        pwmIndexR++;
+        localR = localR >= pwmStepSize-1 ? pwmStepSize-1 : localR + 1;
       } else if (cntTransition <= 5 * pwmStepSize) {
-        pwmIndexG = pwmIndexG == 0 ? 0 : pwmIndexG - 1;
+        localG = localG == 0 ? 0 : localG - 1;
       } else if (cntTransition <= 6 * pwmStepSize) {
-        pwmIndexB++;
+        localB = localB >= pwmStepSize-1 ? pwmStepSize-1 : localB + 1;
       }
-      DelayInter(analogRead(POT) < 4 ? 1 : analogRead(POT) / 4);
+      if (stateSet==1) {
+        localTemp=analogRead(POT) < 4 ? 1 : analogRead(POT) / 4;
+        DelayInter(localTemp);
+        pwmIndexR=localR;
+        pwmIndexG=localG;
+        pwmIndexB=localB;
+      } else if (stateSet==2) {
+        DelayInter(localTemp);
+        pwmIndexR = (unsigned long) localR*analogRead(POT)/1023;
+        pwmIndexG = (unsigned long) localG*analogRead(POT)/1023;
+        pwmIndexB = (unsigned long) localB*analogRead(POT)/1023;
+      }
     }
   } else if (mode == 2) {
-    if (stateSet == 1) {
+    if (stateSet == 1 || stateSet == 2) {
       cntTransition = cntTransition >= 6 ? 1 : cntTransition + 1;
       if (cntTransition == 1 || cntTransition == 2 || cntTransition == 6) {
-        pwmIndexB = pwmStepSize;
+        localB = pwmStepSize-1;
       } else {
-        pwmIndexB = 0;
+        localB = 0;
       }
       if (cntTransition == 2 || cntTransition == 3 || cntTransition == 4) {
-        pwmIndexG = pwmStepSize;
+        localG = pwmStepSize-1;
       } else {
-        pwmIndexG = 0;
+        localG = 0;
       }
       if (cntTransition == 4 || cntTransition == 5 || cntTransition == 6) {
-        pwmIndexR = pwmStepSize;
+        localR = pwmStepSize-1;
       } else {
-        pwmIndexR = 0;
+        localR = 0;
       }
-      DelayInter(analogRead(POT) * 3);
+      
+      if (stateSet==1) {
+        localTemp=analogRead(POT) * 3;
+        DelayInter(localTemp);
+        pwmIndexR=localR;
+        pwmIndexG=localG;
+        pwmIndexB=localB;
+      } else if (stateSet==2) {
+        DelayInter(localTemp);
+        pwmIndexR = (unsigned long) localR*analogRead(POT)/1023;
+        pwmIndexG = (unsigned long) localG*analogRead(POT)/1023;
+        pwmIndexB = (unsigned long) localB*analogRead(POT)/1023;
+      }
     }
   } else if (mode == 3) {
     if (stateSet == 1) {	//		set3_colorBefore
@@ -405,13 +454,13 @@ void SetSettings() {
 void ShowSettings(int _settings) {
   int i;
   if (mode == 0) {
-    stateSet = (_settings <= 1) ? _settings : 0;
+    stateSet = (_settings <= 2) ? _settings : 0;
     if (stateSet == 0) {    //Save when return settings to 0
       set0_R = pwmIndexR;
       set0_G = pwmIndexG;
       set0_B = pwmIndexB;
     }
-    if (stateSet == 1) {		//All
+    if (stateSet == 1) {    //All
       TurnLED(TURN_OFF);
       delay(150);
       TurnLED(TURN_RED);
@@ -422,9 +471,21 @@ void ShowSettings(int _settings) {
       delay(300);
       TurnLED(TURN_OFF);
       delay(300);
+    } else if (stateSet == 2) {   //Change brightness
+      TurnLED(TURN_WHITE);
+      delay(150);
+      for (i = pwmStepSize-1; i >= 0; i -= 1) {
+        analogWrite(LED0_R, pwmStep[i]);
+        analogWrite(LED0_G, pwmStep[i]);
+        analogWrite(LED0_B, pwmStep[i]);
+        analogWrite(LED1_R, pwmStep[i]);
+        analogWrite(LED1_G, pwmStep[i]);
+        analogWrite(LED1_B, pwmStep[i]);
+        delay(500 / pwmStepSize);
+      }
     }
   } else if (mode == 1) {
-    stateSet = (_settings <= 1) ? _settings : 0;
+    stateSet = (_settings <= 2) ? _settings : 0;
     if (stateSet == 0) {
       set1_speed = analogRead(POT) < 4 ? 1 : analogRead(POT) / 4;
     }
@@ -450,9 +511,17 @@ void ShowSettings(int _settings) {
         delay(500 / pwmStepSize);
       }
       delay(300);
+    } else if (stateSet == 2) {   //Change brightness
+      TurnLED(TURN_BLUE);
+      delay(150);
+      for (i = pwmStepSize-1; i >= 0; i -= 1) {
+        analogWrite(LED0_B, pwmStep[i]);
+        analogWrite(LED1_B, pwmStep[i]);
+        delay(500 / pwmStepSize);
+      }
     }
   } else if (mode == 2) {
-    stateSet = (_settings <= 1) ? _settings : 0;
+    stateSet = (_settings <= 2) ? _settings : 0;
     if (stateSet == 0) {
       set2_speed = analogRead(POT) * 3;
     } else if (stateSet == 1) {
@@ -465,6 +534,14 @@ void ShowSettings(int _settings) {
         delay(50);
       }
       delay(300);
+    } else if (stateSet == 2) {   //Change brightness
+      TurnLED(TURN_GREEN);
+      delay(150);
+      for (i = pwmStepSize-1; i >= 0; i -= 1) {
+        analogWrite(LED0_G, pwmStep[i]);
+        analogWrite(LED1_G, pwmStep[i]);
+        delay(500 / pwmStepSize);
+      }
     }
   } else if (mode == 3) {
     stateSet = (_settings <= 3) ? _settings : 0;
@@ -596,7 +673,11 @@ void TurnLED(int _state) {
 	1    1    1    White      ---
 */
 void TurnAllLED_Pot(int _pot, int* _ptR, int* _ptG, int* _ptB) {
-  if (_pot != 0 && _pot <= 146)              //B : Increasing blue
+  if (_pot == 0) {
+    *_ptR = 0;
+    *_ptG = 0;
+    *_ptB = 0;
+  } else if (_pot != 0 && _pot <= 146)              //B : Increasing blue
   {
     *_ptR = 0;        // *1.75 pour ramener 146 à 255(.5)
     *_ptG = 0;        //Le int prends la valeur entière
@@ -683,38 +764,6 @@ void FadeLED() {
     DelayInter(analogRead(POT) < 4 ? 1 : analogRead(POT) / 4);
     if (digitalRead(BUT_SET) == 1) return;
   }
-  /*
-  	for(int c=0; c<255; c++) {
-  		analogWrite(6,c);
-  		delay(analogRead(POT)<4?1:analogRead(POT)/4);
-  		if(digitalRead(BUT_SET)==1) return;
-  	}
-  	for(int c=255; c>0; c--) {
-  		analogWrite(5,c);
-  		delay(analogRead(POT)<4?1:analogRead(POT)/4);
-  		if(digitalRead(BUT_SET)==1) return;
-  	}
-  	for(int c=0; c<255; c++) {
-  		analogWrite(9,c);
-  		delay(analogRead(POT)<4?1:analogRead(POT)/4);
-  		if(digitalRead(BUT_SET)==1) return;
-  	}
-  	for(int c=255; c>0; c--) {
-  		analogWrite(6,c);
-  		delay(analogRead(POT)<4?1:analogRead(POT)/4);
-  		if(digitalRead(BUT_SET)==1) return;
-  	}
-  	for(int c=0; c<255; c++) {
-  		analogWrite(5,c);
-  		delay(analogRead(POT)<4?1:analogRead(POT)/4);
-  		if(digitalRead(BUT_SET)==1) return;
-  	}
-  	for(int c=255; c>0; c--) {
-  		analogWrite(9,c);
-  		delay(analogRead(POT)<4?1:analogRead(POT)/4);
-  		if(digitalRead(BUT_SET)==1) return;
-  	}
-  */
 }
 
 /*
@@ -754,3 +803,8 @@ void EepromUpdateAll() {
   EEPROM.update(35, set3_colorAfterB);
   EEPROM.update(36, set3_delayNight);
 }
+
+
+
+
+
