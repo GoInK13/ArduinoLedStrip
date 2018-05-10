@@ -3,7 +3,7 @@
   (general
     (links 85)
     (no_connects 2)
-    (area 122.424999 51.924999 170.575001 112.575001)
+    (area 113.242381 40.3 185.85 121.785001)
     (thickness 1.6)
     (drawings 95)
     (tracks 417)
@@ -21,14 +21,14 @@
   )
 
   (layers
-    (0 F.Cu signal hide)
-    (31 B.Cu signal hide)
+    (0 F.Cu signal)
+    (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
     (35 F.Paste user)
     (36 B.SilkS user)
-    (37 F.SilkS user hide)
+    (37 F.SilkS user)
     (38 B.Mask user)
     (39 F.Mask user)
     (40 Dwgs.User user)
@@ -44,7 +44,7 @@
   )
 
   (setup
-    (last_trace_width 0.4)
+    (last_trace_width 0.25)
     (user_trace_width 0.4)
     (user_trace_width 0.75)
     (user_trace_width 1)
@@ -2641,7 +2641,7 @@
   (gr_text 5V (at 132 109.25) (layer B.SilkS) (tstamp 5A184D64)
     (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
   )
-  (gr_text 5V (at 134.75 86) (layer B.SilkS) (tstamp 5A184D47)
+  (gr_text 3V3 (at 134.75 86) (layer B.SilkS) (tstamp 5A184D47)
     (effects (font (size 1 1) (thickness 0.15)) (justify left mirror))
   )
   (gr_text GND (at 134.75 81) (layer B.SilkS) (tstamp 5A184D42)
